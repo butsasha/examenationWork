@@ -1,0 +1,235 @@
+body {
+	background: #363E4A !important;
+}
+/* css class for the login generated errors */
+.profilepress-login-status {
+  background-color: #363E4A;
+  color: #ffffff;
+  max-width: 342px;
+  margin: 1px auto;
+  border: medium none;
+  font-size: 15px;
+  font-weight: normal;
+  border-radius: 4px;
+  text-align: center;
+  line-height: 1.4;
+  padding: 8px 5px;
+}
+
+.profilepress-login-status a {
+  color: #ea9629 !important;
+}
+
+div.sp-pp h1 {
+  color: #fff;
+  font-family: "Texta", "Avenir Next", "Avenir", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  text-align: center;
+}
+
+div.sp-pp h2 {
+  font-weight: 400;
+  font-size: 24px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+div.sp-pp .container {
+  font-family: "Avenir Next", "Avenir", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  color: #ffffff;
+  line-height: 1.5;
+  background-color: #363E4A;
+  max-width: 320px;
+  margin: 0 auto;
+  padding: 20px 16px 40px 16px;
+  text-align: center;
+}
+
+div.sp-pp .form-footer {
+  margin-top: 1em;
+}
+
+div.sp-pp .ui-input {
+  position: relative;
+  padding: 0;
+  border: 0;
+}
+
+div.sp-pp .ui-input input {
+  border: 0;
+  color: #fff;
+  background: none;
+  padding: 16px 0 16px 0;
+  font-size: 24px;
+  outline: 0;
+  width: 100%;
+  tap-highlight-color: transparent;
+  touch-callout: none;
+}
+
+div.sp-pp .ui-input input + label {
+  position: relative;
+  display: block;
+  padding: 8px 0 8px 0;
+  text-transform: uppercase;
+  font-size: 14px;
+  letter-spacing: .0875em;
+  font-weight: 500;
+  text-align: left;
+}
+
+div.sp-pp .ui-input input + label::before,
+div.sp-pp .ui-input input + label::after {
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: "";
+  width: 100%;
+  height: 1px;
+}
+
+.ui-input input + label::before {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+div.sp-pp .ui-input input + label::after {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 300ms cubic-bezier(0.215, 0.61, 0.355, 1);
+  background-color: #6EB1FF;
+  height: 2px;
+}
+
+div.sp-pp .ui-input input + label span {
+  position: relative;
+  color: rgba(255, 255, 255, 0.2);
+  transition: color 300ms cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+div.sp-pp .ui-input input + label span::after {
+  content: attr(data-text);
+  position: absolute;
+  overflow: hidden;
+  left: 0;
+  transform: scaleX(1);
+  white-space: nowrap;
+  color: #fff;
+  background-image: linear-gradient(to right, #4A90E2 50%, rgba(255, 255, 255, 0) 0%);
+  background-position: 100% 50%;
+  background-size: 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  backface-visibility: hidden;
+  perspective: 1000;
+  transform: translateZ(0);
+  transition: background-position 300ms cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+div.sp-pp .ui-input input:focus + label::after,
+div.sp-pp .ui-input input.error + label::after,
+div.sp-pp .ui-input input:invalid + label::after,
+div.sp-pp .ui-input input.filled + label::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+div.sp-pp .ui-input input:focus + label span::after,
+div.sp-pp .ui-input input.error + label span::after,
+div.sp-pp .ui-input input:invalid + label span::after,
+div.sp-pp .ui-input input.filled + label span::after {
+  background-image: linear-gradient(to right, white 50%, rgba(255, 255, 255, 0) 0%);
+  background-position: 0% 50%;
+}
+
+div.sp-pp .ui-input input.filled {
+  color: #ffffff;
+}
+
+div.sp-pp .ui-input input.filled + label::after {
+  background-color: #ffffff;
+}
+
+div.sp-pp .ui-input input.filled + label span::after {
+  background-image: linear-gradient(to right, #ffffff 50%, rgba(255, 255, 255, 0) 0%);
+  background-position: 0% 50%;
+}
+
+div.sp-pp .ui-input input:focus {
+  color: #6EB1FF;
+}
+
+div.sp-pp .ui-input input:focus + label::after {
+  background-color: #6EB1FF;
+}
+
+div.sp-pp .ui-input input:focus + label span::after {
+  background-image: linear-gradient(to right, #6EB1FF 50%, rgba(255, 255, 255, 0) 0%);
+  background-position: 0% 50%;
+}
+
+div.sp-pp .ui-input input.error,
+div.sp-pp .ui-input input:invalid {
+  color: #E66161;
+}
+
+div.sp-pp .ui-input input.error + label::after,
+div.sp-pp .ui-input input:invalid + label::after {
+  background-color: #E66161;
+}
+
+div.sp-pp .ui-input input.error + label span::after,
+div.sp-pp .ui-input input:invalid + label span::after {
+  background-image: linear-gradient(to right, #E66161 50%, rgba(255, 255, 255, 0) 0%);
+  background-position: 0% 50%;
+}
+
+div.sp-pp .btn {
+  border: 0;
+  color: #fff;
+  background-color: #50617A;
+  padding: 18px 30px 18px 30px;
+  font-size: 18px;
+  text-transform: uppercase;
+  letter-spacing: .0875em;
+  font-weight: 500;
+  border-radius: 100px;
+  outline: 0;
+  transition: background-color 300ms cubic-bezier(0.215, 0.61, 0.355, 1), color 300ms cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+div.sp-pp .btn:focus,
+div.sp-pp .btn:active,
+div.sp-pp .btn:hover {
+  background-color: #6EB1FF;
+  color: white;
+}
+
+div.sp-pp .__first,
+div.sp-pp .__second,
+{
+  animation-name: fadeIn;
+  animation-duration: 180ms;
+  animation-fill-mode: both;
+  animation-iteration-count: 1;
+}
+
+div.sp-pp .__first {
+  animation-delay: 0;
+}
+
+div.sp-pp .__second {
+  animation-delay: 80ms;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -25%, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}

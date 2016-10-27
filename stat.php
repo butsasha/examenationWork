@@ -1,23 +1,3 @@
-<?php 
-ini_set("display_errors",1);
-error_reporting(E_ALL);
-include 'engine/config.php';
-include 'engine/class/database.php';
-$db = new Database(array(
-                'host' => '94.244.128.42',
-                'username' => 'but', 
-                'password' => '3105044',
-                'db'=> 'cw',
-                'charset' => 'utf8'));
-
-session_start();
-if(!isset($_SESSION['access']) || $_SESSION['access']!=true && $_COOKIE["login"]!="true")
-{
-	$errors['msg'] = 'Не введен логин или пароль! <br> ('.date('d.m.Y H:i:s').') <br>';
-	$_SESSION['errors'] = $errors;
-	header("Location: login.php");
-}
-?>
 <html>
 <head>
     <title>Hotspot statistics</title>
@@ -42,15 +22,40 @@ setInterval("refresh()",60000);
 
 </head>
 <body style="padding: 5px;">
+<div class="container">
 
-<?php
-echo md5('3105044');
-?>
 какой-то текст
 
+<?php 
+session_start();
+ if(!isset($_SESSION['access']) || $_SESSION['access']!=true && $_COOKIE["login"]=="true"){
+
+//if($_COOKIE["login"]!=true){
+	$errors['msg'] = 'Не введен логин или пароль! <br> ('.date('d.m.Y H:i:s').') <br>';
+    $_SESSION['errors'] = $errors;
+	header("Location: index.php");
+} else {
+
+// if password ok
+$date = date('d.m.Y');
+
+	if (isset($_GET['date'])) {
+		$date = htmlspecialchars(trim($_GET['date']));
+
+		if ($_GET['date'] == 0) {
+			$date = date('d.m.Y');
+		} elseif (date('d.m.Y') == $_GET['date']) {
+			header('Location: /stat.php');
+		}
+
+	} else {
+		$date = date('d.m.Y');
+	}
+}
+?>
 
 всё на bootstrap (getbootstrap.com)
 
-
+</div>
 </body>
 </html>
