@@ -32,19 +32,10 @@ if(!isset($_SESSION['access']) || $_SESSION['access']!=true && $_COOKIE["login"]
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker3.standalone.css">
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/locales/bootstrap-datepicker.ru.min.js"></script>
-
-<script>
-function refresh() {
-    location.reload();
-}
-setInterval("refresh()",60000);
-</script>
-
 </head>
 <body style="padding: 5px;">
 
 <?php
-echo md5('3105044');
 ?>
 какой-то текст
 
