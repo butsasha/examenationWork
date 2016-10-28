@@ -1,11 +1,11 @@
 <?php 
-include 'engine/class/database.php';
+include 'database.php';
 
 class Products {
 	private $username = 'but';
 	private $password = '3105044';
 	private $host	  = '94.244.128.42';
-	private $base		  = 'cw';
+	private $base	  = 'cw';
 	private $db;
 	
 	function __construct() {
