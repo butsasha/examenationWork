@@ -24,13 +24,13 @@ class Products {
 	}
 	
 	public function getAll() {
-		$products = $this->db->get('products', NULL, '*');
+					$this->db->orderBy("products.id","desc");
+		$products = $this->db->get('products', 20, '*');
 		return $products;
 	}
 	
-	public function addProduct($category, $name, $descr, $count, $price, $wholeprice) {
+	public function addProduct($name, $descr, $count, $price, $wholeprice) {
 		$data = array("date" => date("Y-m-d H:i:s"),
-					"category"  => $category,
 					"name"  => $name,
 					"descr" => $descr,
 					"count" => $count,

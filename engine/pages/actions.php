@@ -8,15 +8,24 @@ $products = new Products;
 		$productData = constructForm($products->getOne($_REQUEST['id']));
 		echo $productData;
 	} elseif (isset($_REQUEST['change'])) {
-		if ($products->updateProduct($_REQUEST['change'], 
-			array('name'=>$_REQUEST['name'],'descr'=>$_REQUEST['descr'],
-				'count'=>$_REQUEST['count'],'price'=>$_REQUEST['price'],
-				'wholeprice'=>$_REQUEST['wholeprice'])) ) {
-					echo 'Data updated successfully!';
+		$id = $_REQUEST['change'];
+		$data = array('name'=>$_REQUEST['name'],'descr'=>$_REQUEST['descr'],
+					'count'=>$_REQUEST['count'],'price'=>$_REQUEST['price'],
+					'wholeprice'=>$_REQUEST['wholeprice']);
+		if ($products->updateProduct($id,$data)) {
+					echo json_encode(array("status"=>'success', "id"=>$id, "data"=>$data));
 				} else {
-					echo 'Error in data set... Try again..';
+					echo json_encode(array("status" => 'error'));
 				}
 		
+	} elseif (isset($_REQUEST['add'])) {
+		$id = $products->addProduct($_REQUEST['name'],$_REQUEST['descr'],$_REQUEST['count'],$_REQUEST['price'],$_REQUEST['wholeprice']);
+		if ($id != 0) {
+			$result = array("status"=>'success', "id"=>$id, "data"=>$products->getOne($id));
+		} else {
+			$result = array("status"=>'failed');
+		}
+		echo json_encode($result);
 	}
 
 function constructForm($data) {
