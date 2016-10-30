@@ -33,9 +33,9 @@ class Products {
 		$data = array("date" => date("Y-m-d H:i:s"),
 					"name"  => $name,
 					"descr" => $descr,
-					"count" => $count,
-					"price" => $price,
-					"wholeprice" => $wholeprice
+					"count" => (int)$count,
+					"price" => str_replace(',','.',$price),
+					"wholeprice" => str_replace(',','.',$wholeprice)
 		);
 
 		$id = $this->db->insert ('products', $data);

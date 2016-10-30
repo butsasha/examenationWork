@@ -10,18 +10,29 @@ $products = new Products;
 	} elseif (isset($_REQUEST['change'])) {
 		$id = $_REQUEST['change'];
 		$data = array('name'=>$_REQUEST['name'],'descr'=>$_REQUEST['descr'],
-					'count'=>$_REQUEST['count'],'price'=>$_REQUEST['price'],
-					'wholeprice'=>$_REQUEST['wholeprice']);
+					'count'=>$_REQUEST['count'],'price'=>str_replace(',','.',$_REQUEST['price']),
+					'wholeprice'=>str_replace(',','.',$_REQUEST['wholeprice']));
 		if ($products->updateProduct($id,$data)) {
 					echo json_encode(array("status"=>'success', "id"=>$id, "data"=>$data));
 				} else {
-					echo json_encode(array("status" => 'error'));
+					echo json_encode(array("status" => 'failed'));
 				}
 		
 	} elseif (isset($_REQUEST['add'])) {
 		$id = $products->addProduct($_REQUEST['name'],$_REQUEST['descr'],$_REQUEST['count'],$_REQUEST['price'],$_REQUEST['wholeprice']);
 		if ($id != 0) {
-			$result = array("status"=>'success', "id"=>$id, "data"=>$products->getOne($id));
+		$newProd = $products->getOne($id);			
+		$data = '<tr id="row'.$newProd['id'].'"><td>'.$newProd['id'].'</td><td id="name'.$newProd['id'].'">'.$newProd['name'].'</td><td id="descr'.$newProd['id'].'">'.$newProd['descr'].'</td><td id="count'.$newProd['id'].'">'.$newProd['count'].'</td><td id="price'.$newProd['id'].'">'.$newProd['price'].'</td><td id="wholeprice'.$newProd['id'].'">'.$newProd['wholeprice'].'</td><td><button class="btn btn-default btn-md" id="'.$newProd['id'].'" onClick="edit('.$newProd['id'].')" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button> <button type="button" class="btn btn-danger btn-md" onClick="remove('.$newProd['id'].',0)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button></td></tr>';
+			$result = array("status"=>'success', "id"=>$id, "data"=>$data);
+		} else {
+			$result = array("status"=>'failed');
+		}
+		echo json_encode($result);
+	} elseif (isset($_REQUEST['remove'])) {
+		$id = $_REQUEST['remove'];
+		$res = $products->removeProduct($id);
+		if ($res != 0) {		
+			$result = array("status"=>'success');
 		} else {
 			$result = array("status"=>'failed');
 		}
@@ -66,11 +77,4 @@ function constructForm($data) {
 	
 return $returnData;
 }
-	
-// $id = $prod->addProduct('AddedFromClass','Prod From Class method','555555','5.55','2,55');
-// var_dump($id);
-// var_dump($prod->getOne($id));
-// var_dump($prod->updateProduct('3', array('category'=>'1', 'name'=>'updateûûûTst','descr'=>'assssadadadadsd','count'=>'123456','price'=>'1516516005125100.515151', 'wholeprice'=>'1009952')));
-// var_dump($prod->getOne('3'));
-// var_dump($prod->getAll());
 ?>

@@ -21,10 +21,11 @@ $db = new Database(array(
                 'charset' => 'utf8'));
 
 $admins = $db->getOne("admins");
+
 session_start();
 if(isset($_POST['pwd']) && isset($_POST['login']))
 {
-    if(md5($_POST['pwd']) == $admins['password'])
+    if(md5($_POST['pwd']) == $admins['password'] && $_POST['login'] == $admins['login'])
 	{
 		setcookie ("login", true, time()+3600);
 		$_SESSION['access'] = true;
@@ -34,26 +35,25 @@ if(isset($_POST['pwd']) && isset($_POST['login']))
 		$_SESSION['errors'] = $errors;
 		header("Location: login.php");
     }
-} else {
-	if(isset($_SESSION['access']) && $_SESSION['access'] == true)
-	{
-    	$errors['msg'] = 'Не введен логин или пароль! <br> ('.date('d.m.Y H:i:s').') <br>';
-	    $_SESSION['errors'] = $errors;
-    	header("Location: index.php");
-	}
-
-
+   }
+   
+if(isset($_SESSION['access']) && $_COOKIE["login"]==true)
+{
+	header("Location: index.php");
+}
+	   
 ?>
 
 <body>
-<div class="spss-pp">
+<div class="sp-pp">
   <div class="container">
     <h1>Оптовий склад BUTALEX</h1>
 	<h2>Введіть логін та пароль</h2>
 	<h6><span style="color: #E76163;"> <?php if (isset($_SESSION['errors'])) { echo $_SESSION['errors']['msg']; } ?></span></h6>
 <form name="loginform" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
     <fieldset class="form-fieldset ui-input __first">
-      <input type="text" id="username" name="login" placeholder="login" required/>
+	
+      <input type="text" id="username" name="login" required/>
       <label for="login">
         <span data-text="Логин">Логін</span>
       </label>
@@ -73,7 +73,7 @@ if(isset($_POST['pwd']) && isset($_POST['login']))
   </div>
 </div>
 <?php
-}
+
 
 if (isset($_GET['exit'])) {
 	$_COOKIE["login"]=false;

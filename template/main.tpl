@@ -6,21 +6,20 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
 	<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 	<!--- https://eternicode.github.io/bootstrap-datepicker/ --->
 	<link rel="stylesheet" href="/template/css/style.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker3.min.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker3.standalone.css">
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/locales/bootstrap-datepicker.ru.min.js"></script>
 	<script type="text/javascript" src="/template/js/notify.min.js"></script>
 	<script type="text/javascript">
 	$('#myModal').on('shown.bs.modal', function () {
 		$('#myInput').focus()
 	})
+	$('#removeConfirm').on('shown.bs.modal', function () {
+		$('#myInput').focus()
+	})
 	$(document).ready(function () {
 		$('#addProd').hide();
 	});
+	
 	function addProduct() {
 	$(document).ready(function () {
 
@@ -37,7 +36,7 @@
                 success: function (data) {
 				var result = JSON.parse(data);
                      if (result['status'] == 'success') {
-						$('#allProducts tr:first').after('<tr><td>'+result['data']['id']+'</td><td id="name'+result['data']['id']+'">'+result['data']['name']+'</td><td id="descr'+result['data']['id']+'">'+result['data']['descr']+'</td><td id="count'+result['data']['id']+'">'+result['data']['count']+'</td><td id="price'+result['data']['id']+'">'+result['data']['price']+'</td><td id="wholeprice'+result['data']['id']+'">'+result['data']['wholeprice']+'</td><td><button class="btn btn-default" id="'+result['data']['id']+'" onClick="edit('+result['data']['id']+')" data-toggle="modal" data-target="#myModal">Edit</button></td></tr>');
+						$('#allProducts tr:first').after(result['data']);
 					 }
                   }
               });
@@ -72,7 +71,7 @@
 						$('#myModal').modal('hide');
 						$('#changeButton').hide();
 						updateProducts(result['id'], result['data']);
-					} else if (result['status'] == 'error') {
+					} else if (result['status'] == 'failed') {
 						alert('danger', 'Error occured...', 'Data not changed!');
 						$('#myModal').modal('hide');
 						$('#changeButton').hide();
@@ -85,6 +84,33 @@
 				  },
               });
         });
+   }
+   
+   function remove(id,confirm) {
+	if (confirm == 0) {
+		$('#removeConfirm').modal('show');
+		$('#removeButton').attr('onClick', 'remove('+id+',1);');
+	} else if (confirm == 1) {
+		$('#removeConfirm').modal('hide');
+	   $.post({
+			url: 'engine/pages/actions.php?remove='+id,
+			// data: data,
+			success: function (data) {
+				var result = JSON.parse(data);
+				if (result['status'] == 'success') {
+					alert('success', '', 'Product #'+id+' successfully deleted!');
+					$('#row'+id).remove();
+				} else if (result['status'] == 'failed') {
+					alert('danger', 'Error occured...', 'Product not deleted!');
+				}
+			  },
+			  error: function(data) {
+				alert('danger', 'Error occured...', 'Data not changed!');
+				$('#myModal').modal('hide');
+				$('#changeButton').hide();
+			  },
+		  });	
+	}
    }
    
    function alert(status,header,message) {
@@ -117,7 +143,7 @@
 			$('#addProd').fadeIn().show();
 		}
 	}
-   
+	
 </script>
 </head>
 <body>
@@ -137,6 +163,7 @@
             <li><a href="/">Home</a></li>
 			<li><a href="#" onClick="addProd();">New Product</a></li>
             <li><a href="http://butalex.com/" target="_blank">About me</a></li>
+			<li><a href="/login.php?exit">Exit</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -147,17 +174,33 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+        <h4 class="modal-title" id="myModalLabel">Change data</h4>
       </div>
       <div class="modal-body" id="modal-content">
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" id="changeButton" class="btn btn-primary">Change</button>
+        <button type="button" id="changeButton" class="btn btn-primary" tabindex="-1">Change</button>
       </div>
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="removeConfirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabelRemove">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">You are serious need remove this item?</h4>
+      </div>
+      <div class="modal-body" id="modal-remove">
+	    <button type="button" class="btn btn-default btn-block" data-dismiss="modal" tabindex="-1">Close</button>
+        <button type="button" id="removeButton" class="btn btn-danger btn-block" onClick="remove()">I'm serious! Remove!</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="addProd" class="container">
 <div class="panel panel-default">
   <div class="panel-heading">
@@ -168,37 +211,37 @@
 		<div class="form-group">
 			<label for="nameNew" class="col-sm-2 control-label">Name:</label>
 			<div class="col-sm-10">
-			<input type="text" class="form-control" id="nameNew">
+			<input type="text" class="form-control" id="nameNew" tabindex="1">
 			</div>
 		</div>
 		<div class="form-group">
 			<label for="descrNew" class="col-sm-2 control-label">Description:</label>
 			<div class="col-sm-10">
-			<textarea type="text" class="form-control" id="descrNew"></textarea>
+			<textarea type="text" class="form-control" id="descrNew" tabindex="2"></textarea>
 			</div>
 		</div>
 		<div class="form-group">
 			<label for="countNew" class="col-sm-2 control-label">Count of products:</label>
 			<div class="col-sm-10">
-			<input type="text" class="form-control" id="countNew">
+			<input type="text" class="form-control" id="countNew" tabindex="3">
 			</div>
 		</div>
 		<div class="form-group">
 			<label for="priceNew" class="col-sm-2 control-label">Price:</label>
 			<div class="col-sm-10">
-			<input type="text" class="form-control" id="priceNew">
+			<input type="text" class="form-control" id="priceNew" tabindex="4">
 			</div>
 		</div>
 		<div class="form-group">
 			<label for="WholepriceNew" class="col-sm-2 control-label">Wholeprice:</label>
 			<div class="col-sm-10">
-			<input type="text" class="form-control" id="wholepriceNew">
+			<input type="text" class="form-control" id="wholepriceNew" tabindex="5">
 			</div>
 		</div>
 		<div class="col-sm-2">
 		</div>
 		<div class="col-sm-10">
-			<button type="button" id="addButton" onClick="addProduct();" class="btn btn-primary btn-block">Add</button>
+			<button type="button" id="addButton" onClick="addProduct();" class="btn btn-primary btn-block" tabindex="-1">Add</button>
 		</div>
 	</form>
   </div>
