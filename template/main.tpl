@@ -9,6 +9,7 @@
 	<!--- https://eternicode.github.io/bootstrap-datepicker/ --->
 	<link rel="stylesheet" href="/template/css/style.css">
 	<script type="text/javascript" src="/template/js/notify.min.js"></script>
+	
 	<script type="text/javascript">
 	$('#myModal').on('shown.bs.modal', function () {
 		$('#myInput').focus()
@@ -26,6 +27,7 @@
 	var newData = {
 		name: $('#nameNew').val(),
 		descr: $('#descrNew').val(),
+		category: $('#categoryNew option:selected').val(),
 		count: $('#countNew').val(),
 		price: $('#priceNew').val(),
 		wholeprice: $('#wholepriceNew').val(),
@@ -59,7 +61,7 @@
    
    function change(id) {
    $(document).ready(function () {
-   var data = {"name":$('#name'+id).val(),"descr":$('#descr'+id).val(),"count":$('#count'+id).val(),"price":$('#price'+id).val(),"wholeprice":$('#wholeprice'+id).val(),}
+   var data = {"name":$('#name'+id).val(),"descr":$('#descr'+id).val(), "category":$('#category'+id+' option:selected').val(), "count":$('#count'+id).val(),"price":$('#price'+id).val(),"wholeprice":$('#wholeprice'+id).val(),}
            $.post({
 				url: 'engine/pages/actions.php?change='+id,
                 data: data,
@@ -70,7 +72,7 @@
 						$('#modal-content').html('');
 						$('#myModal').modal('hide');
 						$('#changeButton').hide();
-						updateProducts(result['id'], result['data']);
+						updateProducts(result['id'], result['data'], result['category_name']);
 					} else if (result['status'] == 'failed') {
 						alert('danger', 'Error occured...', 'Data not changed!');
 						$('#myModal').modal('hide');
@@ -128,9 +130,10 @@
 	});
    }
    
-   function updateProducts(id,data) {
+   function updateProducts(id,data, category) {
 		$('#name'+id).html(data['name']);
 		$('#descr'+id).text(data['descr']);
+		$("#category"+id).html(category);
 		$('#count'+id).text(data['count']);
 		$('#price'+id).text(data['price']);
 		$('#wholeprice'+id).text(data['wholeprice']);
@@ -218,6 +221,15 @@
 			<label for="descrNew" class="col-sm-2 control-label">Description:</label>
 			<div class="col-sm-10">
 			<textarea type="text" class="form-control" id="descrNew" tabindex="2"></textarea>
+			</div>
+		</div>
+		<div class="form-group">
+		<label for="cats" class="col-sm-2">Categories:</label>
+			<div class="col-sm-10">
+				<select class="form-control" id="categoryNew">
+					<option>---Select---</option>
+					<?= $listOfCategories?>
+				</select>
 			</div>
 		</div>
 		<div class="form-group">

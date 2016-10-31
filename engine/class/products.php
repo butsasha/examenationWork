@@ -1,20 +1,13 @@
 <?php 
-include 'database.php';
-
 class Products {
 	private $username = 'but';
 	private $password = '3105044';
 	private $host	  = '94.244.128.42';
 	private $base	  = 'cw';
-	private $db;
+	public $db;
 	
-	function __construct() {
-		$this->db = new Database(array(
-                'host' => $this->host,
-                'username' => $this->username, 
-                'password' => $this->password,
-                'db'=> $this->base,
-                'charset' => 'utf8'));
+	function __construct($db) {
+		$this->db = $db;
 	}
 	
 	public function getOne($id) {
@@ -29,10 +22,11 @@ class Products {
 		return $products;
 	}
 	
-	public function addProduct($name, $descr, $count, $price, $wholeprice) {
+	public function addProduct($name, $descr, $category,$count, $price, $wholeprice) {
 		$data = array("date" => date("Y-m-d H:i:s"),
 					"name"  => $name,
 					"descr" => $descr,
+					"category" => $category,
 					"count" => (int)$count,
 					"price" => str_replace(',','.',$price),
 					"wholeprice" => str_replace(',','.',$wholeprice)
