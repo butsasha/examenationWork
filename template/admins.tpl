@@ -160,7 +160,6 @@
           <ul class="nav navbar-nav">
             <li><a href="/">Home</a></li>
 			<li><a href="#" onClick="addAdminModal();">New Admin</a></li>
-			<li><a href="/admin.php">Admins</a></li>
 			<li><a href="/index.php">Products</a></li>
             <li><a href="http://butalex.com/" target="_blank">About me</a></li>
 			<li><a href="/login.php?exit">Exit</a></li>
