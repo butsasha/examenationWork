@@ -18,27 +18,26 @@
 		$('#myInput').focus()
 	})
 	$(document).ready(function () {
-		$('#addProd').hide();
+		$('#addAdminModal').hide();
 	});
 	
-	function addProduct() {
+	function addAdmin() {
 	$(document).ready(function () {
-
 	var newData = {
-		name: $('#nameNew').val(),
-		descr: $('#descrNew').val(),
-		category: $('#categoryNew option:selected').val(),
-		count: $('#countNew').val(),
-		price: $('#priceNew').val(),
-		wholeprice: $('#wholepriceNew').val(),
+		login: $('#loginNew').val(),
+		email: $('#emailNew').val(),
+		password: $('#passwordNew').val(),
 	};
            $.post({
-				url: 'engine/pages/actions.php?add',
+				url: 'engine/pages/admin_act.php?add',
                 data: newData,
                 success: function (data) {
 				var result = JSON.parse(data);
                      if (result['status'] == 'success') {
-						$('#allProducts tr:first').after(result['data']);
+						$('#allAdmins tr:first').after(result['data']);
+						alert('success', 'Good!', "Admin was added");
+					 } else if (result['status'] == 'failed') {
+						alert('danger', 'Error occured...', result['reason']);
 					 }
                   }
               });
@@ -49,7 +48,7 @@
 	$(document).ready(function () {
 	$('#changeButton').show();
            $.post({
-				url: 'engine/pages/actions.php?edit='+id,
+				url: 'engine/pages/admin_act.php?edit='+id,
                 data: {"id":id},
                 success: function (data) {
                      $('#modal-content').html(data);
@@ -61,9 +60,9 @@
    
    function change(id) {
    $(document).ready(function () {
-   var data = {"name":$('#name'+id).val(),"descr":$('#descr'+id).val(), "category":$('#category'+id+' option:selected').val(), "count":$('#count'+id).val(),"price":$('#price'+id).val(),"wholeprice":$('#wholeprice'+id).val(),}
+   var data = {"login":$('#login'+id).val(),"password":$('#password'+id).val(),"email":$('#email'+id).val(),}
            $.post({
-				url: 'engine/pages/actions.php?change='+id,
+				url: 'engine/pages/admin_act.php?change='+id,
                 data: data,
                 success: function (data) {
 					var result = JSON.parse(data);
@@ -72,7 +71,7 @@
 						$('#modal-content').html('');
 						$('#myModal').modal('hide');
 						$('#changeButton').hide();
-						updateProducts(result['id'], result['data'], result['category_name']);
+						updateAdmin(result['id'], result['data'], result['category_name']);
 					} else if (result['status'] == 'failed') {
 						alert('danger', 'Error occured...', 'Data not changed!');
 						$('#myModal').modal('hide');
@@ -95,15 +94,15 @@
 	} else if (confirm == 1) {
 		$('#removeConfirm').modal('hide');
 	   $.post({
-			url: 'engine/pages/actions.php?remove='+id,
+			url: 'engine/pages/admin_act.php?remove='+id,
 			// data: data,
 			success: function (data) {
 				var result = JSON.parse(data);
 				if (result['status'] == 'success') {
-					alert('success', '', 'Product #'+id+' successfully deleted!');
+					alert('success', '', 'Admin #'+id+' successfully deleted!');
 					$('#row'+id).remove();
 				} else if (result['status'] == 'failed') {
-					alert('danger', 'Error occured...', 'Product not deleted!');
+					alert('danger', 'Error occured...', 'Admin not deleted!');
 				}
 			  },
 			  error: function(data) {
@@ -130,20 +129,16 @@
 	});
    }
    
-   function updateProducts(id,data, category) {
-		$('#name'+id).html(data['name']);
-		$('#descr'+id).text(data['descr']);
-		$("#category"+id).html(category);
-		$('#count'+id).text(data['count']);
-		$('#price'+id).text(data['price']);
-		$('#wholeprice'+id).text(data['wholeprice']);
+   function updateAdmin(id,data) {
+		$('#login'+id).html(data['login']);
+		$('#email'+id).text(data['email']);
    }
    
-	function addProd() {
-		if( $('#addProd').is(':visible') ) { 
-			$('#addProd').fadeOut().hide(); 
+	function addAdminModal() {
+		if( $('#addAdminModal').is(':visible') ) { 
+			$('#addAdminModal').fadeOut().hide(); 
 		} else {
-			$('#addProd').fadeIn().show();
+			$('#addAdminModal').fadeIn().show();
 		}
 	}
 	
@@ -164,8 +159,9 @@
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <li><a href="/">Home</a></li>
-			<li><a href="#" onClick="addProd();">New Product</a></li>
+			<li><a href="#" onClick="addAdminModal();">New Admin</a></li>
 			<li><a href="/admin.php">Admins</a></li>
+			<li><a href="/index.php">Products</a></li>
             <li><a href="http://butalex.com/" target="_blank">About me</a></li>
 			<li><a href="/login.php?exit">Exit</a></li>
           </ul>
@@ -195,7 +191,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">You are serious need remove this item?</h4>
+        <h4 class="modal-title" id="myModalLabel">You are serious need remove this admin?</h4>
       </div>
       <div class="modal-body" id="modal-remove">
 	    <button type="button" class="btn btn-default btn-block" data-dismiss="modal" tabindex="-1">Close</button>
@@ -205,56 +201,35 @@
   </div>
 </div>
 
-<div id="addProd" class="container">
+<div id="addAdminModal" class="container">
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title">Add new product</h3>
+    <h3 class="panel-title">Add new admin</h3>
   </div>
   <div class="panel-body">
     <form id="formNew" class="form-horizontal">
 		<div class="form-group">
-			<label for="nameNew" class="col-sm-2 control-label">Name:</label>
+			<label for="loginNew" class="col-sm-2 control-label">Login:</label>
 			<div class="col-sm-10">
-			<input type="text" class="form-control" id="nameNew" tabindex="1">
+			<input type="text" class="form-control" id="loginNew" tabindex="1">
 			</div>
 		</div>
 		<div class="form-group">
-			<label for="descrNew" class="col-sm-2 control-label">Description:</label>
+			<label for="passwordNew" class="col-sm-2 control-label">Password:</label>
 			<div class="col-sm-10">
-			<textarea type="text" class="form-control" id="descrNew" tabindex="2"></textarea>
+			<input type="password" class="form-control" id="passwordNew" tabindex="4">
 			</div>
 		</div>
 		<div class="form-group">
-		<label for="cats" class="col-sm-2">Categories:</label>
+			<label for="emailNew" class="col-sm-2 control-label">E-mail:</label>
 			<div class="col-sm-10">
-				<select class="form-control" id="categoryNew">
-					<option>---Select---</option>
-					<?= $listOfCategories?>
-				</select>
-			</div>
-		</div>
-		<div class="form-group">
-			<label for="countNew" class="col-sm-2 control-label">Count of products:</label>
-			<div class="col-sm-10">
-			<input type="text" class="form-control" id="countNew" tabindex="3">
-			</div>
-		</div>
-		<div class="form-group">
-			<label for="priceNew" class="col-sm-2 control-label">Price:</label>
-			<div class="col-sm-10">
-			<input type="text" class="form-control" id="priceNew" tabindex="4">
-			</div>
-		</div>
-		<div class="form-group">
-			<label for="WholepriceNew" class="col-sm-2 control-label">Wholeprice:</label>
-			<div class="col-sm-10">
-			<input type="text" class="form-control" id="wholepriceNew" tabindex="5">
+			<input type="email" class="form-control" id="emailNew" tabindex="5">
 			</div>
 		</div>
 		<div class="col-sm-2">
 		</div>
 		<div class="col-sm-10">
-			<button type="button" id="addButton" onClick="addProduct();" class="btn btn-primary btn-block" tabindex="-1">Add</button>
+			<button type="button" id="addButton" onClick="addAdmin();" class="btn btn-primary btn-block" tabindex="-1">Add</button>
 		</div>
 	</form>
   </div>
@@ -265,7 +240,7 @@
 <div class="panel panel-default">
   <!-- Default panel contents -->
   <div class="panel-heading"><h3 class="panel-title">List of products</h3></div>
-	<?= $all_products_tpl ;?>
+	<?= $all_admins_tpl ;?>
 </div>
 </body>
 </html>
